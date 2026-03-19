@@ -30,14 +30,15 @@ pub fn init_props(config: &IcebergSinkConfig) -> Result<HashMap<String, String>,
 fn get_props_s3(config: &IcebergSinkConfig) -> Result<HashMap<String, String>, Error> {
     let mut props: HashMap<String, String> = HashMap::new();
     props.insert("s3.region".to_string(), config.store_region.clone());
-    props.insert(
-        "s3.access-key-id".to_string(),
-        config.store_access_key_id.clone(),
-    );
-    props.insert(
-        "s3.secret-access-key".to_string(),
-        config.store_secret_access_key.clone(),
-    );
+    if let Some(access_key_id) = &config.store_access_key_id {
+        props.insert("s3.access-key-id".to_string(), access_key_id.clone());
+    }
+    if let Some(secret_access_key) = &config.store_secret_access_key {
+        props.insert(
+            "s3.secret-access-key".to_string(),
+            secret_access_key.clone(),
+        );
+    }
     props.insert("s3.endpoint".to_string(), config.store_url.clone());
     Ok(props)
 }
